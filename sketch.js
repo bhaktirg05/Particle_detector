@@ -27,12 +27,15 @@ function update() {
     }
     detectX1 += value;
     detectX2 = detectX1 + dWidth;
-    console.log("x1 : ", detectX1, "x2", detectX2);
 }
 
+const bRangeX = 100;
+const bRangeY = 0;
+const bWidth = 50;
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
+    r.DrawRectangle(bRangeX, bRangeY, bWidth, Height, r.SKYBLUE);
     r.DrawRectangle(detectX1, detectY, dWidth, Height, r.WHITE);
     r.EndDrawing();
 
