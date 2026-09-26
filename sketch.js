@@ -13,11 +13,19 @@ let detectX2;
 const detectY = 0;
 const dWidth = 30;
 let value = 0;
+const bRangeX1 = 100;
+const bRangeX2 = bRangeX1 + dWidth;
+const bRangeY = 0;
+const bWidth = 50;
+const cRange1 = bRangeX1 - dWidth;
+const cRange2 = bRangeX2 + dWidth;
+let color;
 
 function setup() {
     r.InitWindow(Width, Height, "Particle_Detector");
     r.SetTargetFPS(FPS);
 }
+
 
 function update() {
     if (detectX1 === 0) {
@@ -27,18 +35,16 @@ function update() {
     }
     detectX1 += value;
     detectX2 = detectX1 + dWidth;
+    color = detectX1 >= cRange1 && detectX1 <= cRange2 ? r.RED : r.WHITE;
+
 }
 
-const bRangeX = 100;
-const bRangeY = 0;
-const bWidth = 50;
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
-    r.DrawRectangle(bRangeX, bRangeY, bWidth, Height, r.SKYBLUE);
-    r.DrawRectangle(detectX1, detectY, dWidth, Height, r.WHITE);
+    r.DrawRectangle(bRangeX1, bRangeY, bWidth, Height, r.SKYBLUE);
+    r.DrawRectangle(detectX1, detectY, dWidth, Height, color);
     r.EndDrawing();
-
 }
 
 function teardown() {
