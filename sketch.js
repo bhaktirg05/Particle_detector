@@ -21,7 +21,7 @@ const bWidth1 = 50;
 const cRange1 = bRangeX1 - dWidth;
 const cRange2 = bRangeX1 + bWidth1;
 const bRangeX2 = 200;
-const bWidth2 = 20;
+const bWidth2 = 5;
 const cRange3 = bRangeX2 - dWidth;
 const cRange4 = bRangeX2 + bWidth2;
 
