@@ -1,10 +1,5 @@
 
 const r = require("raylib");
-
-function running() {
-    return !r.WindowShouldClose();
-}
-
 const Width = 500;
 const Height = 250;
 const FPS = 60;
@@ -44,6 +39,10 @@ let color3 = r.WHITE;
 
 let value1 = 0;
 let value2 = 0;
+
+function running() {
+    return !r.WindowShouldClose();
+}
 
 function setup() {
     r.InitWindow(Width, Height, "Particle_Detector");
@@ -91,7 +90,6 @@ function draw() {
     r.DrawRectangle(field1_X, field1_Y, fieldWidth1, Height, r.SKYBLUE);
     r.DrawRectangle(field2_X, field1_Y, fieldWidth2, Height, r.SKYBLUE);
     r.DrawRectangle(field3_X, field3_Y, Width, fieldWidth3, r.SKYBLUE);
-
 
     r.DrawRectangle(detect1_X, detectY, detectWidth, Height, color1);
     r.DrawRectangle(detect2_X, detectY, detectWidth, Height, color2);
