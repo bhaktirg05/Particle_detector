@@ -1,45 +1,37 @@
 
 const r = require("raylib");
-
-function running() {
-    return !r.WindowShouldClose();
-}
-
 const Width = 500;
 const Height = 250;
 const FPS = 60;
 const half = Width / 2;
 
-let detect1_X1 = 0;
-let detect1_X2;
-
-let detect2_X1 = half;
-let detect2_X2;
-
+let detect1_X = 0;
+let detect2_X = half;
 const detectY = 0;
-const dWidth = 30;
 
-let detect3X = 0;
-let detect3_Y1 = 0;
+let detect3_X = 0;
+let detect3_Y = 0;
 
-const bWidth1 = 50;
-const bRangeX1 = half - bWidth1;
-const bRangeY = 0;
+const detectWidth = 30;
 
-const cRange1 = bRangeX1 - dWidth;
+const fieldWidth1 = 50;
+const field1_X = half - fieldWidth1;
+const field1_Y = 0;
 
-const bRangeX2 = half + 100;
-const bWidth2 = 5;
+const field1_Range = field1_X - detectWidth;
 
-const cRange2 = bRangeX2 - dWidth;
-const cRange3 = bRangeX2 + bWidth2;
+const field2_X = half + 100;
+const fieldWidth2 = 5;
 
-const bRangeX3 = 0;
-const bRangeY1 = Height / 2;
-const bWidth3 = 20;
+const field2_Range1 = field2_X - detectWidth;
+const field2_Range2 = field2_X + fieldWidth2;
 
-const cRange4 = bRangeY1 - dWidth;
-const cRange5 = bRangeY1 + bWidth3;
+const field3_X = 0;
+const field3_Y = Height / 2;
+const fieldWidth3 = 20;
+
+const field3_Range1 = field3_Y - detectWidth;
+const field3_Range2 = field3_Y + fieldWidth3;
 
 let color1;
 let color2;
@@ -47,7 +39,10 @@ let color3 = r.WHITE;
 
 let value1 = 0;
 let value2 = 0;
-let value3 = 0;
+
+function running() {
+    return !r.WindowShouldClose();
+}
 
 function setup() {
     r.InitWindow(Width, Height, "Particle_Detector");
@@ -60,49 +55,45 @@ function colorSelection(x, range1, range2, range3 = half) {
 }
 
 function update() {
-
-    if (detect1_X1 === 0) {
+    if (detect1_X === 0) {
         value1 = 0.5;
-    } else if (detect1_X2 === half) {
+    } else if (detect1_X + detectWidth === half) {
         value1 = -0.5;
     }
 
-    detect1_X1 += value1;
-    detect1_X2 = detect1_X1 + dWidth;
+    detect1_X += value1;
 
-    if (detect2_X1 === half) {
+    if (detect2_X === half) {
         value2 = 1;
-    } else if (detect2_X2 === Width) {
+    } else if (detect2_X + detectWidth === Width) {
         value2 = -1;
     }
 
-    detect2_X1 += value2;
-    detect2_X2 = detect2_X1 + dWidth;
+    detect2_X += value2;
 
-    if (detect3_Y1 === 0) {
+    if (detect3_Y === 0) {
         value1 = 0.5;
-    } else if (detect3_Y1 + dWidth === half) {
+    } else if (detect3_Y + detectWidth === half) {
         value1 = -0.5;
     }
 
-    detect3_Y1 += value1;
+    detect3_Y += value1;
 
-    color1 = colorSelection(detect1_X1, cRange1, half);
-    color2 = colorSelection(detect2_X1, cRange2, cRange3);
-    color3 = colorSelection(detect3_Y1, cRange4, cRange5, bRangeY1);
+    color1 = colorSelection(detect1_X, field1_Range, half);
+    color2 = colorSelection(detect2_X, field2_Range1, field2_Range2);
+    color3 = colorSelection(detect3_Y, field3_Range1, field3_Range2, field3_Y);
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
-    r.DrawRectangle(bRangeX1, bRangeY, bWidth1, Height, r.SKYBLUE);
-    r.DrawRectangle(bRangeX2, bRangeY, bWidth2, Height, r.SKYBLUE);
-    r.DrawRectangle(bRangeX3, bRangeY1, Width, bWidth3, r.SKYBLUE);
+    r.DrawRectangle(field1_X, field1_Y, fieldWidth1, Height, r.SKYBLUE);
+    r.DrawRectangle(field2_X, field1_Y, fieldWidth2, Height, r.SKYBLUE);
+    r.DrawRectangle(field3_X, field3_Y, Width, fieldWidth3, r.SKYBLUE);
 
-
-    r.DrawRectangle(detect1_X1, detectY, dWidth, Height, color1);
-    r.DrawRectangle(detect2_X1, detectY, dWidth, Height, color2);
-    r.DrawRectangle(detect3X, detect3_Y1, Width, dWidth, color3);
+    r.DrawRectangle(detect1_X, detectY, detectWidth, Height, color1);
+    r.DrawRectangle(detect2_X, detectY, detectWidth, Height, color2);
+    r.DrawRectangle(detect3_X, detect3_Y, Width, detectWidth, color3);
 
     r.EndDrawing();
 }
