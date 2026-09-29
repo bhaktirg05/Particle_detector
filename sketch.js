@@ -2,6 +2,7 @@ const r = require("raylib");
 const d = require("./detector_function");
 const d1 = require("./detector1");
 const d2 = require("./detector2");
+const d3 = require("./detector3");
 
 const Width = 500;
 const Height = 250;
@@ -13,10 +14,10 @@ const detector2_Y = 0;
 let detector2Velocity = 2;
 let hasDetected2;
 
-let detector3_X = 0;
-let detector3_Y = 0;
-let detector3Velocity = 1;
-let hasDetected3;
+// let d3.detectorX = 0;
+// let d3.detectorY = 0;
+// let d3.Velocity = 1;
+// let d3.hasDetected;
 
 const THICKNESS = 30;
 
@@ -57,7 +58,7 @@ function overlapFields(dStart, dEnd, f1Start, f1End, f2Start, f2End) {
 function hasDetected() {
     let detector1End = d1.detectorX + THICKNESS;
     let detector2End = detector2_X + THICKNESS;
-    let detector3End = detector3_Y + THICKNESS;
+    let detector3End = d3.detectorY + THICKNESS;
 
     d1.hasDetected = overlapFields(
         d1.detectorX,
@@ -75,12 +76,12 @@ function hasDetected() {
         field2_X,
         field2End,
     );
-    hasDetected3 = overlaps(detector3_Y, detector3End, field3_Y, field3End);
+    d3.hasDetected = overlaps(d3.detectorY, detector3End, field3_Y, field3End);
 }
 
 function update() {
     d1.Velocity = d.toggleVelocity(
-        d.checkBoundaries(d1.detectorX, 0, half, THICKNESS),
+        d.checkBoundaries(d1.detectorX, 0, r.GetScreenWidth() / 2, THICKNESS),
         d1.Velocity,
     );
     d1.detectorX += d1.Velocity;
@@ -91,11 +92,11 @@ function update() {
     );
     detector2_X += detector2Velocity;
 
-    detector3Velocity = d.toggleVelocity(
-        d.checkBoundaries(detector3_Y, 0, Height, THICKNESS),
-        detector3Velocity,
+    d3.Velocity = d.toggleVelocity(
+        d.checkBoundaries(d3.detectorY, 0, Height, THICKNESS),
+        d3.Velocity,
     );
-    detector3_Y += detector3Velocity;
+    d3.detectorY += d3.Velocity;
     hasDetected();
 }
 
@@ -130,11 +131,11 @@ function draw() {
         d.selectColor(hasDetected2),
     );
     drawDetector(
-        detector3_X,
-        detector3_Y,
+        d3.detectorX,
+        d3.detectorY,
         Width,
         THICKNESS,
-        d.selectColor(hasDetected3),
+        d.selectColor(d3.hasDetected),
     );
 
     r.EndDrawing();
