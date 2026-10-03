@@ -6,20 +6,9 @@ const d1 = d.createDetector(0, 0, 1, 30, s.HEIGHT);
 const d2 = d.createDetector(s.HALF, 0, 2, 30, s.HEIGHT);
 const d3 = d.createDetector(0, 0, 1, s.WIDTH, 30);
 
-const field1Thickness = 50;
-const field1_X = s.HALF - field1Thickness;
-const field1_Y = 0;
-const field1End = field1_X + field1Thickness;
-
-const field2_X = s.HALF + 100;
-const field2_Y = 0;
-const field2Thickness = 5;
-const field2End = field2_X + field2Thickness;
-
-const field3_X = 0;
-const field3_Y = s.HEIGHT / 2;
-const field3Thickness = 20;
-const field3End = field3_Y + field3Thickness;
+const f1 = f.createField(200, 0, 50, s.HEIGHT, 250);
+const f2 = f.createField(350, 0, 5, s.HEIGHT, 355);
+const f3 = f.createField(0, s.HEIGHT / 2, s.WIDTH, 20, s.HEIGHT / 2 + 20);
 
 function running() {
     return !r.WindowShouldClose();
@@ -36,8 +25,8 @@ function overlaps(start1, end1, start2, end2) {
 
 function overlapFields(dStart, dEnd) {
     return (
-        overlaps(dStart, dEnd, field1_X, field1End) ||
-        overlaps(dStart, dEnd, field2_X, field2End)
+        overlaps(dStart, dEnd, f1.X, f1.end) ||
+        overlaps(dStart, dEnd, f2.X, f2.end)
     );
 }
 function hasDetected() {
@@ -46,7 +35,7 @@ function hasDetected() {
     d3.end = d3.Y + d3.height;
     d1.hasDetected = overlapFields(d1.X, d1.end);
     d2.hasDetected = overlapFields(d2.X, d2.end);
-    d3.hasDetected = overlaps(d3.Y, d3.end, field3_Y, field3End);
+    d3.hasDetected = overlaps(d3.Y, d3.end, f3.Y, f3.end);
 }
 
 function update() {
@@ -82,9 +71,9 @@ function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    drawField(field1_X, field1_Y, field1Thickness, s.HEIGHT, r.SKYBLUE);
-    drawField(field2_X, field2_Y, field2Thickness, s.HEIGHT, r.SKYBLUE);
-    drawField(field3_X, field3_Y, s.WIDTH, field3Thickness, r.SKYBLUE);
+    drawField(f1.X, f1.Y, f1.width, s.HEIGHT, r.SKYBLUE);
+    drawField(f2.X, f2.Y, f2.width, s.HEIGHT, r.SKYBLUE);
+    drawField(f3.X, f3.Y, s.WIDTH, f3.height, r.SKYBLUE);
 
     drawDetector(
         d1.X,
