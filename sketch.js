@@ -11,8 +11,6 @@ const field1_X = s.HALF - field1Thickness;
 const field1_Y = 0;
 const field1End = field1_X + field1Thickness;
 
-// const f1 = f.createField(200, 0, 50, s.HEIGHT, 250);
-
 const field2_X = s.HALF + 100;
 const field2_Y = 0;
 const field2Thickness = 5;
