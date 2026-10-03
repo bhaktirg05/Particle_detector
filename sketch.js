@@ -2,6 +2,7 @@ const r = require("raylib");
 const s = require("./screen");
 const d = require("./detector_function");
 const f = require("./field_function");
+
 const d1 = d.createDetector(0, 0, 1, 30, s.HEIGHT);
 const d2 = d.createDetector(s.HALF, 0, 2, 30, s.HEIGHT);
 const d3 = d.createDetector(0, 0, 1, s.WIDTH, 30);
@@ -40,62 +41,44 @@ function hasDetected() {
 
 function update() {
     d1.velocity = d.toggleVelocity(
-        d.checkBoundaries(d1.X, 0, s.HALF, d1.width),
+        d.checkBoundaries(d1.X, d1.end, 0, s.HALF),
         d1.velocity,
     );
     d1.X += d1.velocity;
 
     d2.velocity = d.toggleVelocity(
-        d.checkBoundaries(d2.X, s.HALF, s.WIDTH, d2.width),
+        d.checkBoundaries(d2.X, d2.end, s.HALF, s.WIDTH),
         d2.velocity,
     );
     d2.X += d2.velocity;
 
     d3.velocity = d.toggleVelocity(
-        d.checkBoundaries(d3.Y, 0, s.HEIGHT, d3.height),
+        d.checkBoundaries(d3.Y, d3.end, 0, s.HEIGHT),
         d3.velocity,
     );
     d3.Y += d3.velocity;
     hasDetected();
 }
 
-function drawDetector(x, y, width, height, color) {
-    r.DrawRectangle(x, y, width, height, color);
+function drawDetector(d, color) {
+    r.DrawRectangle(d.X, d.Y, d.width, d.height, color);
 }
 
-function drawField(x, y, width, height, color) {
-    r.DrawRectangle(x, y, width, height, color);
+function drawField(f) {
+    r.DrawRectangle(f.X, f.Y, f.width, f.height, f.color);
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    drawField(f1.X, f1.Y, f1.width, s.HEIGHT, r.SKYBLUE);
-    drawField(f2.X, f2.Y, f2.width, s.HEIGHT, r.SKYBLUE);
-    drawField(f3.X, f3.Y, s.WIDTH, f3.height, r.SKYBLUE);
+    drawField(f1);
+    drawField(f2);
+    drawField(f3);
 
-    drawDetector(
-        d1.X,
-        d1.Y,
-        d1.width,
-        d1.height,
-        d.selectColor(d1.hasDetected),
-    );
-    drawDetector(
-        d2.X,
-        d2.Y,
-        d2.width,
-        d2.height,
-        d.selectColor(d2.hasDetected),
-    );
-    drawDetector(
-        d3.X,
-        d3.Y,
-        d3.width,
-        d3.height,
-        d.selectColor(d3.hasDetected),
-    );
+    drawDetector(d1, d.selectColor(d1.hasDetected));
+    drawDetector(d2, d.selectColor(d2.hasDetected));
+    drawDetector(d3, d.selectColor(d3.hasDetected));
 
     r.EndDrawing();
 }

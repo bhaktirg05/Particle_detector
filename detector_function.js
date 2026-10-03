@@ -4,8 +4,12 @@ function selectColor(detected) {
     return detected ? r.RED : r.WHITE;
 }
 
-function checkBoundaries(start, leftBoundary, rightBoundary, thickness) {
-    const end = start + thickness;
+// function checkBoundaries(start, leftBoundary, rightBoundary, thickness) {
+//     const end = start + thickness;
+//     return start < leftBoundary || end > rightBoundary;
+// }
+
+function checkBoundaries(start, end, leftBoundary, rightBoundary) {
     return start < leftBoundary || end > rightBoundary;
 }
 
@@ -24,6 +28,8 @@ function createDetector(x, y, velocity, w, h) {
         height: h,
     };
 }
+
+function update() {}
 
 module.exports = {
     selectColor,
