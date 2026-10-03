@@ -1,38 +1,25 @@
 const r = require("raylib");
+const s = require("./screen");
 const d = require("./detector_function");
-const d1 = require("./detector1");
-const d2 = require("./detector2");
-const d3 = require("./detector3");
-
-const Width = 500;
-const Height = 250;
-const FPS = 60;
-const half = Width / 2;
-
-let detector2_X = half;
-const detector2_Y = 0;
-let detector2Velocity = 2;
-let hasDetected2;
-
-// let d3.detectorX = 0;
-// let d3.detectorY = 0;
-// let d3.Velocity = 1;
-// let d3.hasDetected;
-
-const THICKNESS = 30;
+const f = require("./field_function");
+const d1 = d.createDetector(0, 0, 1, 30, s.HEIGHT);
+const d2 = d.createDetector(s.HALF, 0, 2, 30, s.HEIGHT);
+const d3 = d.createDetector(0, 0, 1, s.WIDTH, 30);
 
 const field1Thickness = 50;
-const field1_X = half - field1Thickness;
+const field1_X = s.HALF - field1Thickness;
 const field1_Y = 0;
 const field1End = field1_X + field1Thickness;
 
-const field2_X = half + 100;
+// const f1 = f.createField(200, 0, 50, s.HEIGHT, 250);
+
+const field2_X = s.HALF + 100;
 const field2_Y = 0;
 const field2Thickness = 5;
 const field2End = field2_X + field2Thickness;
 
 const field3_X = 0;
-const field3_Y = Height / 2;
+const field3_Y = s.HEIGHT / 2;
 const field3Thickness = 20;
 const field3End = field3_Y + field3Thickness;
 
@@ -41,62 +28,47 @@ function running() {
 }
 
 function setup() {
-    r.InitWindow(Width, Height, "Particle_Detector");
-    r.SetTargetFPS(FPS);
+    r.InitWindow(s.WIDTH, s.HEIGHT, s.TITLE);
+    r.SetTargetFPS(s.FPS);
 }
 
 function overlaps(start1, end1, start2, end2) {
     return !(end1 < start2 || end2 < start1);
 }
 
-function overlapFields(dStart, dEnd, f1Start, f1End, f2Start, f2End) {
+function overlapFields(dStart, dEnd) {
     return (
-        overlaps(dStart, dEnd, f1Start, f1End) ||
-        overlaps(dStart, dEnd, f2Start, f2End)
+        overlaps(dStart, dEnd, field1_X, field1End) ||
+        overlaps(dStart, dEnd, field2_X, field2End)
     );
 }
 function hasDetected() {
-    let detector1End = d1.detectorX + THICKNESS;
-    let detector2End = detector2_X + THICKNESS;
-    let detector3End = d3.detectorY + THICKNESS;
-
-    d1.hasDetected = overlapFields(
-        d1.detectorX,
-        detector1End,
-        field1_X,
-        field1End,
-        field2_X,
-        field2End,
-    );
-    hasDetected2 = overlapFields(
-        detector2_X,
-        detector2End,
-        field1_X,
-        field1End,
-        field2_X,
-        field2End,
-    );
-    d3.hasDetected = overlaps(d3.detectorY, detector3End, field3_Y, field3End);
+    d1.end = d1.X + d1.width;
+    d2.end = d2.X + d2.width;
+    d3.end = d3.Y + d3.height;
+    d1.hasDetected = overlapFields(d1.X, d1.end);
+    d2.hasDetected = overlapFields(d2.X, d2.end);
+    d3.hasDetected = overlaps(d3.Y, d3.end, field3_Y, field3End);
 }
 
 function update() {
-    d1.Velocity = d.toggleVelocity(
-        d.checkBoundaries(d1.detectorX, 0, r.GetScreenWidth() / 2, THICKNESS),
-        d1.Velocity,
+    d1.velocity = d.toggleVelocity(
+        d.checkBoundaries(d1.X, 0, s.HALF, d1.width),
+        d1.velocity,
     );
-    d1.detectorX += d1.Velocity;
+    d1.X += d1.velocity;
 
-    detector2Velocity = d.toggleVelocity(
-        d.checkBoundaries(detector2_X, half, Width, THICKNESS),
-        detector2Velocity,
+    d2.velocity = d.toggleVelocity(
+        d.checkBoundaries(d2.X, s.HALF, s.WIDTH, d2.width),
+        d2.velocity,
     );
-    detector2_X += detector2Velocity;
+    d2.X += d2.velocity;
 
-    d3.Velocity = d.toggleVelocity(
-        d.checkBoundaries(d3.detectorY, 0, Height, THICKNESS),
-        d3.Velocity,
+    d3.velocity = d.toggleVelocity(
+        d.checkBoundaries(d3.Y, 0, s.HEIGHT, d3.height),
+        d3.velocity,
     );
-    d3.detectorY += d3.Velocity;
+    d3.Y += d3.velocity;
     hasDetected();
 }
 
@@ -112,29 +84,29 @@ function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    drawField(field1_X, field1_Y, field1Thickness, Height, r.SKYBLUE);
-    drawField(field2_X, field2_Y, field2Thickness, Height, r.SKYBLUE);
-    drawField(field3_X, field3_Y, Width, field3Thickness, r.SKYBLUE);
+    drawField(field1_X, field1_Y, field1Thickness, s.HEIGHT, r.SKYBLUE);
+    drawField(field2_X, field2_Y, field2Thickness, s.HEIGHT, r.SKYBLUE);
+    drawField(field3_X, field3_Y, s.WIDTH, field3Thickness, r.SKYBLUE);
 
     drawDetector(
-        d1.detectorX,
-        d1.detectorY,
-        THICKNESS,
-        Height,
+        d1.X,
+        d1.Y,
+        d1.width,
+        d1.height,
         d.selectColor(d1.hasDetected),
     );
     drawDetector(
-        detector2_X,
-        detector2_Y,
-        THICKNESS,
-        Height,
-        d.selectColor(hasDetected2),
+        d2.X,
+        d2.Y,
+        d2.width,
+        d2.height,
+        d.selectColor(d2.hasDetected),
     );
     drawDetector(
-        d3.detectorX,
-        d3.detectorY,
-        Width,
-        THICKNESS,
+        d3.X,
+        d3.Y,
+        d3.width,
+        d3.height,
         d.selectColor(d3.hasDetected),
     );
 

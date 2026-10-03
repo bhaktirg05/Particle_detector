@@ -1,6 +1,6 @@
-const r = require("raylib");
+const s = require("./screen");
 
-let detectorX = r.GetScreenWidth() / 2;
+let detectorX = s.HALF;
 const detectorY = 0;
 let Velocity = 2;
 let hasDetected;

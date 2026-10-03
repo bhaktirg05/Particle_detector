@@ -401,3 +401,144 @@ module.exports = {
     draw,
     teardown,
 };
+
+const r = require("raylib");
+const s = require("./screen");
+const d = require("./detector_function");
+const d1 = require("./detector1");
+const d2 = require("./detector2");
+const d3 = require("./detector3");
+
+const detectorThinkness = 30;
+
+const field1Thickness = 50;
+const field1_X = s.HALF - field1Thickness;
+const field1_Y = 0;
+const field1End = field1_X + field1Thickness;
+
+const field2_X = s.HALF + 100;
+const field2_Y = 0;
+const field2Thickness = 5;
+const field2End = field2_X + field2Thickness;
+
+const field3_X = 0;
+const field3_Y = s.HEIGHT / 2;
+const field3Thickness = 20;
+const field3End = field3_Y + field3Thickness;
+
+function running() {
+    return !r.WindowShouldClose();
+}
+
+function setup() {
+    r.InitWindow(s.WIDTH, s.HEIGHT, s.TITLE);
+    r.SetTargetFPS(s.FPS);
+}
+
+function overlaps(start1, end1, start2, end2) {
+    return !(end1 < start2 || end2 < start1);
+}
+
+function overlapFields(dStart, dEnd, f1Start, f1End, f2Start, f2End) {
+    return (
+        overlaps(dStart, dEnd, f1Start, f1End) ||
+        overlaps(dStart, dEnd, f2Start, f2End)
+    );
+}
+function hasDetected() {
+    let detector1End = d1.detectorX + detectorThinkness;
+    let detector2End = d2.detectorX + detectorThinkness;
+    let detector3End = d3.detectorY + detectorThinkness;
+
+    d1.hasDetected = overlapFields(
+        d1.detectorX,
+        detector1End,
+        field1_X,
+        field1End,
+        field2_X,
+        field2End,
+    );
+    d2.hasDetected = overlapFields(
+        d2.detectorX,
+        detector2End,
+        field1_X,
+        field1End,
+        field2_X,
+        field2End,
+    );
+    d3.hasDetected = overlaps(d3.detectorY, detector3End, field3_Y, field3End);
+}
+
+function update() {
+    d1.Velocity = d.toggleVelocity(
+        d.checkBoundaries(d1.detectorX, 0, s.HALF, detectorThinkness),
+        d1.Velocity,
+    );
+    d1.detectorX += d1.Velocity;
+
+    d2.Velocity = d.toggleVelocity(
+        d.checkBoundaries(d2.detectorX, s.HALF, s.WIDTH, detectorThinkness),
+        d2.Velocity,
+    );
+    d2.detectorX += d2.Velocity;
+
+    d3.Velocity = d.toggleVelocity(
+        d.checkBoundaries(d3.detectorY, 0, s.HEIGHT, detectorThinkness),
+        d3.Velocity,
+    );
+    d3.detectorY += d3.Velocity;
+    hasDetected();
+}
+
+function drawDetector(x, y, width, height, color) {
+    r.DrawRectangle(x, y, width, height, color);
+}
+
+function drawField(x, y, width, height, color) {
+    r.DrawRectangle(x, y, width, height, color);
+}
+
+function draw() {
+    r.BeginDrawing();
+    r.ClearBackground(r.BLACK);
+
+    drawField(field1_X, field1_Y, field1Thickness, s.HEIGHT, r.SKYBLUE);
+    drawField(field2_X, field2_Y, field2Thickness, s.HEIGHT, r.SKYBLUE);
+    drawField(field3_X, field3_Y, s.WIDTH, field3Thickness, r.SKYBLUE);
+
+    drawDetector(
+        d1.detectorX,
+        d1.detectorY,
+        detectorThinkness,
+        s.HEIGHT,
+        d.selectColor(d1.hasDetected),
+    );
+    drawDetector(
+        d2.detectorX,
+        d2.detectorY,
+        detectorThinkness,
+        s.HEIGHT,
+        d.selectColor(d2.hasDetected),
+    );
+    drawDetector(
+        d3.detectorX,
+        d3.detectorY,
+        s.WIDTH,
+        detectorThinkness,
+        d.selectColor(d3.hasDetected),
+    );
+
+    r.EndDrawing();
+}
+
+function teardown() {
+    r.CloseWindow();
+}
+
+module.exports = {
+    running,
+    setup,
+    update,
+    draw,
+    teardown,
+};
