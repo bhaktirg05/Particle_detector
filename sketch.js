@@ -31,54 +31,29 @@ function overlapFields(dStart, dEnd) {
     );
 }
 function hasDetected() {
-    d1.end = d1.X + d1.width;
-    d2.end = d2.X + d2.width;
-    d3.end = d3.Y + d3.height;
     d1.hasDetected = overlapFields(d1.X, d1.end);
     d2.hasDetected = overlapFields(d2.X, d2.end);
     d3.hasDetected = overlaps(d3.Y, d3.end, f3.Y, f3.end);
 }
 
 function update() {
-    d1.velocity = d.toggleVelocity(
-        d.checkBoundaries(d1.X, d1.end, 0, s.HALF),
-        d1.velocity,
-    );
-    d1.X += d1.velocity;
-
-    d2.velocity = d.toggleVelocity(
-        d.checkBoundaries(d2.X, d2.end, s.HALF, s.WIDTH),
-        d2.velocity,
-    );
-    d2.X += d2.velocity;
-
-    d3.velocity = d.toggleVelocity(
-        d.checkBoundaries(d3.Y, d3.end, 0, s.HEIGHT),
-        d3.velocity,
-    );
-    d3.Y += d3.velocity;
+    d.update(d1, "X", 0, s.HALF, "width");
+    d.update(d2, "X", s.HALF, s.WIDTH, "width");
+    d.update(d3, "Y", 0, s.HEIGHT, "height");
     hasDetected();
-}
-
-function drawDetector(d, color) {
-    r.DrawRectangle(d.X, d.Y, d.width, d.height, color);
-}
-
-function drawField(f) {
-    r.DrawRectangle(f.X, f.Y, f.width, f.height, f.color);
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    drawField(f1);
-    drawField(f2);
-    drawField(f3);
+    f.drawField(f1);
+    f.drawField(f2);
+    f.drawField(f3);
 
-    drawDetector(d1, d.selectColor(d1.hasDetected));
-    drawDetector(d2, d.selectColor(d2.hasDetected));
-    drawDetector(d3, d.selectColor(d3.hasDetected));
+    d.drawDetector(d1, d.selectColor(d1.hasDetected));
+    d.drawDetector(d2, d.selectColor(d2.hasDetected));
+    d.drawDetector(d3, d.selectColor(d3.hasDetected));
 
     r.EndDrawing();
 }

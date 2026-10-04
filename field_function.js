@@ -11,6 +11,11 @@ function createField(x, y, w, h, e) {
     };
 }
 
+function drawField(f) {
+    r.DrawRectangle(f.X, f.Y, f.width, f.height, f.color);
+}
+
 module.exports = {
     createField,
+    drawField,
 };

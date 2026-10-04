@@ -29,11 +29,24 @@ function createDetector(x, y, velocity, w, h) {
     };
 }
 
-function update() {}
+function update(d, x, start, end, t) {
+    d.velocity = toggleVelocity(
+        checkBoundaries(d[x], d.end, start, end),
+        d.velocity,
+    );
+    d[x] += d.velocity;
+    d.end = d[x] + d[t];
+}
+
+function drawDetector(d, color) {
+    r.DrawRectangle(d.X, d.Y, d.width, d.height, color);
+}
 
 module.exports = {
     selectColor,
     checkBoundaries,
     toggleVelocity,
     createDetector,
+    update,
+    drawDetector,
 };
