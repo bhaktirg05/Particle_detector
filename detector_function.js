@@ -46,8 +46,8 @@ function update(d, x, start, end, t, f1, f2) {
     d.color = selectColor(d.hasDetected);
 }
 
-function drawDetector(d, color) {
-    r.DrawRectangle(d.X, d.Y, d.width, d.height, color);
+function drawDetector(d) {
+    r.DrawRectangle(d.X, d.Y, d.width, d.height, d.color);
 }
 
 module.exports = {

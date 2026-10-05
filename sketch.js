@@ -34,9 +34,9 @@ function draw() {
     f.drawField(f2);
     f.drawField(f3);
 
-    d.drawDetector(d1, d.selectColor(d1.hasDetected));
-    d.drawDetector(d2, d.selectColor(d2.hasDetected));
-    d.drawDetector(d3, d.selectColor(d3.hasDetected));
+    d.drawDetector(d1);
+    d.drawDetector(d2);
+    d.drawDetector(d3);
 
     r.EndDrawing();
 }
