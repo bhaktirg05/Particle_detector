@@ -20,27 +20,10 @@ function setup() {
     r.SetTargetFPS(s.FPS);
 }
 
-function overlaps(start1, end1, start2, end2) {
-    return !(end1 < start2 || end2 < start1);
-}
-
-function overlapFields(dStart, dEnd) {
-    return (
-        overlaps(dStart, dEnd, f1.X, f1.end) ||
-        overlaps(dStart, dEnd, f2.X, f2.end)
-    );
-}
-function hasDetected() {
-    d1.hasDetected = overlapFields(d1.X, d1.end);
-    d2.hasDetected = overlapFields(d2.X, d2.end);
-    d3.hasDetected = overlaps(d3.Y, d3.end, f3.Y, f3.end);
-}
-
 function update() {
-    d.update(d1, "X", 0, s.HALF, "width");
-    d.update(d2, "X", s.HALF, s.WIDTH, "width");
-    d.update(d3, "Y", 0, s.HEIGHT, "height");
-    hasDetected();
+    d.update(d1, "X", 0, s.HALF, "width", f1, f2);
+    d.update(d2, "X", s.HALF, s.WIDTH, "width", f1, f2);
+    d.update(d3, "Y", 0, s.HEIGHT, "height", f3);
 }
 
 function draw() {
